@@ -13,12 +13,47 @@ st.write("Bu uygulama, büyük ses dosyalarını küçük parçalara ayırır ve
 # Fonksiyonlar
 def convert_to_wav(file_path):
     """MP3 veya MP4 dosyasını WAV formatına dönüştürme."""
-    audio = AudioSegment.from_file(file_path)
-    temp_wav_path = file_path.replace(".mp3", ".wav").replace(".mp4", ".wav")
-    audio = audio.set_frame_rate(16000)  # Örnekleme oranını 16kHz olarak ayarlayın
-    audio = audio.set_channels(1)  # Tek kanallı ses (Mono)
-    audio.export(temp_wav_path, format="wav")  # WAV formatında kaydedin
-    return temp_wav_path
+    try:
+        # Ses dosyasını yükleyin
+        audio = AudioSegment.from_file(file_path)
+        
+        # Geçici bir WAV dosyası için yol oluşturun
+        temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+        temp_wav_path = temp_wav.name
+        
+        # Ses ayarlarını yapın (örnekleme oranı ve kanallar)
+        audio = audio.set_frame_rate(16000)  # Örnekleme oranını 16kHz olarak ayarla
+        audio = audio.set_channels(1)  # Tek kanallı ses (Mono)
+        
+        # Ses dosyasını WAV formatında kaydet
+        audio.export(temp_wav_path, format="wav")
+        
+        # Geçici dosyayı kapat ve yolunu döndür
+        temp_wav.close()
+        return temp_wav_path
+    
+    except Exception as e:
+        st.error(f"Ses dönüştürme hatası: {e}")
+        return None
+
+# Uygulama mantığı
+uploaded_file = st.file_uploader("Ses dosyasını yükleyin (MP3 veya MP4)", type=["mp3", "mp4"])
+
+if uploaded_file is not None:
+    # Geçici bir dosyaya ses dosyasını kaydedin
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+        temp_file.write(uploaded_file.read())
+        temp_file_path = temp_file.name
+
+    # MP3 veya MP4 dosyasını WAV formatına dönüştür
+    wav_file_path = convert_to_wav(temp_file_path)
+
+    if wav_file_path:
+        st.success("Ses dosyası başarıyla WAV formatına dönüştürüldü.")
+        st.audio(wav_file_path, format="audio/wav")
+    else:
+        st.error("Ses dosyası dönüştürme başarısız.")
+
 
 def split_audio(audio, chunk_length):
     """Ses dosyasını belirlenen sürelere göre küçük parçalara bölme."""
