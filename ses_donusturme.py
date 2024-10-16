@@ -7,7 +7,7 @@ from docx import Document
 from io import BytesIO
 
 # Başlık ve Açıklama
-st.title("Türkçe Ses ve Video Dosyalarını Parçalara Bölerek Metne Dönüştürme")
+st.title("Lycia-Sound-to-Text")
 st.write("Bu uygulama, büyük ses dosyalarını küçük parçalara ayırır ve her bir parçayı metne dönüştürerek sonuçları birleştirir.")
 
 # Fonksiyonlar
