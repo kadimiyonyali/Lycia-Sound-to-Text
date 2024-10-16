@@ -2,3 +2,4 @@ streamlit
 speechrecognition
 pydub
 docx
+python-docx
