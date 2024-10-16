@@ -12,7 +12,7 @@ st.write("Bu uygulama, büyük ses dosyalarını küçük parçalara ayırır ve
 
 # Fonksiyonlar
 def convert_to_wav(file_path):
-    """MP3 veya MP4 dosyasını WAV formatına dönüştürme."""
+    """MP3 veya MP4A dosyasını WAV formatına dönüştürme."""
     try:
         # Ses dosyasını yükleyin
         audio = AudioSegment.from_file(file_path)
